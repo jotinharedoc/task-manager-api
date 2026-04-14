@@ -1,6 +1,7 @@
 # Task Manager API
 
-API REST desenvolvida com Node.js, Express e MongoDB para gerenciamento de usuários com autenticação JWT.
+API REST desenvolvida com Node.js, Express e MongoDB para gerenciamento de tarefas com autenticação JWT.
+O projeto evoluiu para um modelo de **planner**, permitindo organização por data e prioridade.
 
 ---
 
@@ -8,9 +9,10 @@ API REST desenvolvida com Node.js, Express e MongoDB para gerenciamento de usuá
 
 * Cadastro de usuário
 * Login com autenticação JWT
-* Criptografia de senha com bcrypt
-* Middleware de proteção de rotas
-* Rota protegida de perfil
+* Proteção de rotas com middleware
+* CRUD completo de tarefas
+* Associação de tarefas ao usuário autenticado
+* Organização por data e prioridade
 
 ---
 
@@ -19,7 +21,7 @@ API REST desenvolvida com Node.js, Express e MongoDB para gerenciamento de usuá
 * Node.js
 * Express
 * MongoDB (Mongoose)
-* JWT (jsonwebtoken)
+* JSON Web Token (JWT)
 * Bcrypt
 
 ---
@@ -28,67 +30,61 @@ API REST desenvolvida com Node.js, Express e MongoDB para gerenciamento de usuá
 
 ### 1. Clonar o repositório
 
-```
+```bash
 git clone https://github.com/jotinharedoc/task-manager-api.git
 ```
 
-### 2. Entrar na pasta
+### 2. Acessar a pasta
 
-```
+```bash
 cd task-manager-api
 ```
 
 ### 3. Instalar dependências
 
-```
+```bash
 npm install
 ```
 
 ### 4. Criar arquivo `.env`
 
-Crie um arquivo `.env` na raiz:
+Crie um arquivo `.env` na raiz com:
 
-```
+```env
 PORT=3001
 MONGO_URI=sua_string_do_mongodb
-JWT_SECRET=sua_chave_secreta
+JWT_SECRET=seu_segredo
 ```
 
 ### 5. Rodar o servidor
 
-```
+```bash
 npm run dev
-```
-
-Servidor rodando em:
-
-```
-http://localhost:3001
 ```
 
 ---
 
 ## Rotas da API
 
-### Registro
+### Autenticação
+
+#### Registro
 
 POST `/auth/register`
 
-```
+```json
 {
-  "name": "João",
+  "name": "Joao",
   "email": "joao@email.com",
   "password": "123456"
 }
 ```
 
----
-
-### Login
+#### Login
 
 POST `/auth/login`
 
-```
+```json
 {
   "email": "joao@email.com",
   "password": "123456"
@@ -97,14 +93,68 @@ POST `/auth/login`
 
 ---
 
-### Perfil (rota protegida)
+### Tarefas (protegidas)
 
-GET `/profile`
+Todas as rotas abaixo exigem token:
 
-Headers:
+Header:
 
 ```
 Authorization: Bearer SEU_TOKEN
+```
+
+---
+
+#### Criar tarefa
+
+POST `/tasks`
+
+```json
+{
+  "title": "Treino",
+  "description": "Academia",
+  "date": "2026-04-20",
+  "priority": "alta"
+}
+```
+
+---
+
+#### Listar tarefas
+
+GET `/tasks`
+
+---
+
+#### Atualizar tarefa
+
+PUT `/tasks/:id`
+
+```json
+{
+  "title": "Treino atualizado",
+  "completed": true,
+  "priority": "media"
+}
+```
+
+---
+
+#### Deletar tarefa
+
+DELETE `/tasks/:id`
+
+---
+
+## Estrutura do projeto
+
+```
+src/
+  controllers/
+  models/
+  routes/
+  middlewares/
+  config/
 ```
 
 ---
@@ -113,19 +163,21 @@ Authorization: Bearer SEU_TOKEN
 
 * Senhas criptografadas com bcrypt
 * Autenticação via JWT
-* Variáveis sensíveis protegidas com `.env`
+* Rotas protegidas por middleware
+* Variáveis sensíveis armazenadas em `.env`
 
 ---
 
 ## Melhorias futuras
 
-* CRUD de tarefas
-* Relacionamento usuário → tarefas
-* Deploy da API
-* Documentação com Swagger
+* Filtro de tarefas por data
+* Filtro por prioridade
+* Paginação
+* Interface frontend (planner visual)
+* Deploy da aplicação
 
 ---
 
 ## Autor
 
-Desenvolvido por https://github.com/jotinharedoc
+https://github.com/jotinharedoc
