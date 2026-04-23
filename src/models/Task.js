@@ -4,7 +4,8 @@ const taskSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true
+      required: true,
+      trim: true
     },
     description: {
       type: String,
@@ -15,8 +16,8 @@ const taskSchema = new mongoose.Schema(
       default: false
     },
     date: {
-      type: String,
-      default: ''
+      type: Date,
+      default: null
     },
     priority: {
       type: String,

@@ -4,13 +4,17 @@ const jwt = require('jsonwebtoken');
 
 const register = async (req, res) => {
   try {
-    console.log('BODY REGISTER:', req.body);
-
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({
         message: 'Nome, email e senha são obrigatórios'
+      });
+    }
+
+    if (password.length < 8) {
+      return res.status(400).json({
+        message: 'Senha deve ter ao menos 8 caracteres'
       });
     }
 
@@ -72,9 +76,12 @@ const login = async (req, res) => {
       });
     }
 
+    const secret = process.env.JWT_SECRET;
+    if (!secret) throw new Error('JWT_SECRET não definida no .env');
+
     const token = jwt.sign(
       { id: user._id },
-      process.env.JWT_SECRET,
+      secret,
       { expiresIn: '1d' }
     );
 

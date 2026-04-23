@@ -1,24 +1,31 @@
-const express = require('express');
-const authRoutes = require('./routes/authRoutes');
-const authMiddleware = require('./middlewares/authMiddleware');
-const taskRoutes = require('./routes/taskRoutes');
+  const express = require('express');
+  const cors = require('cors');
+  const authRoutes = require('./routes/authRoutes');
+  const taskRoutes = require('./routes/taskRoutes');
+  const profileRoutes = require('./routes/profileRoutes');
 
-const app = express();
+  const app = express();
 
-app.use(express.json());
+  app.use(cors());
 
-app.use('/auth', authRoutes);
-app.use('/tasks', taskRoutes);
+  app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('API rodando');
-});
 
-app.get('/profile', authMiddleware, (req, res) => {
-  res.json({
-    message: 'Acesso permitido',
-    userId: req.userId
+  app.use('/auth', authRoutes);
+  app.use('/tasks', taskRoutes);
+  app.use('/profile', profileRoutes);
+
+  app.get('/', (req, res) => {
+    res.send('API rodando');
   });
-});
 
-module.exports = app;
+  app.use((req, res) => {
+    res.status(404).json({ message: 'Rota não encontrada' });
+  });
+
+  app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ message: 'Erro interno do servidor' });
+  });
+
+  module.exports = app;
